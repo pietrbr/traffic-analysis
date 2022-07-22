@@ -1,6 +1,8 @@
 # Description of the tests
 
-Three tests were performed:
+The scenario was urban (Carter Field).
+
+Three tests were performed with the drone still on ground:
 
 | N.  | Hour       | Distance (m) | Offset [bs - ue] (ms) | File Name                              | CMD a port | CMD r port | TEL a port | TEL r port |
 | --- | ---------- | ------------ | --------------------- | -------------------------------------- | ---------- | ---------- | ---------- | ---------- |
