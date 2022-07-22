@@ -1,4 +1,5 @@
 import pyshark
+import argparse
 import os
 import statistics
 import matplotlib.pyplot as plt
@@ -141,6 +142,17 @@ def daje():
 
 
 def main():
+
+    # Parsing arguments
+    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser.add_argument(
+        'file_name',
+        metavar='file_name',
+        type=str,
+        nargs='?',
+        help='file path and name',
+        default='first-session/csv_bs/1010123456007_metrics.csv')
+
     daje()
 
 
