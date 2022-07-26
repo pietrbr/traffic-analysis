@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Current File",
+            "name": "Run Current File",
             "type": "python",
             "request": "launch",
             "program": "${file}",
@@ -16,7 +16,7 @@
             "name": "visualize_tshark_a.py",
             "type": "python",
             "request": "launch",
-            "program": "visualize_tshark.py",
+            "program": "tsharkCaptureAnalyzer.py",
             "args": [
                 "session-1/tshark_bs/tshark_log_2022_07_20_20_21_20.pcapng",
                 "-tcp",
@@ -29,7 +29,7 @@
             "name": "visualize_tshark_r.py",
             "type": "python",
             "request": "launch",
-            "program": "visualize_tshark.py",
+            "program": "tsharkCaptureAnalyzer.py",
             "args": [
                 "session-1/tshark_ue/tshark_log_2022_07_20_20_21_17.pcapng",
                 "-tcp",
