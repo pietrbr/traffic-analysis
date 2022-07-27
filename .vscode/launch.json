@@ -43,11 +43,6 @@
             "type": "python",
             "request": "launch",
             "program": "prova.py",
-            "args": [
-                "session-1/tshark_bs/tshark_log_2022_07_20_19_34_17.pcapng",
-                "-vars",
-                "analysis_ack_rtt"
-            ],
             "console": "integratedTerminal",
             "justMyCode": true
         }

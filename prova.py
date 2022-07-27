@@ -1,32 +1,7 @@
-import argparse, time
+import time
 import pandas as pd
+import seaborn as sns
 from matplotlib import pyplot as plt
-
-# Parsing arguments
-parser = argparse.ArgumentParser(description='Boh')
-
-start = time.time()
-
-parser.add_argument('file',
-                    metavar='file',
-                    type=str,
-                    nargs='?',
-                    help='file name',
-                    default='file.pcapng')
-parser.add_argument('-vars',
-                    dest='vars',
-                    metavar='vars',
-                    type=str,
-                    nargs='+',
-                    action='store',
-                    help='vars')
-args = parser.parse_args()
-
-print(args.file, args.vars)
-if type(args.vars) is not None:
-    print(len(args.vars))
-
-print("Time:", time.time() - start)
 
 # dataframes
 flow_1 = [1, 2, 3, 4]
@@ -45,3 +20,9 @@ daje = {"a": 1, "b": 2}
 
 for help in daje:
     print(daje[help])
+
+string = 'daje!'
+last = string[-1]
+prima = string[0:-1]
+
+print(string, last, prima)
