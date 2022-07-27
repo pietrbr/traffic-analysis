@@ -13,31 +13,29 @@
             "justMyCode": true
         },
         {
-            "name": "visualize_tshark_a.py",
+            "name": "pcapngRead",
             "type": "python",
             "request": "launch",
-            "program": "tsharkCaptureAnalyzer.py",
+            "program": "pcapngRead.py",
             "args": [
-                "session-1/tshark_bs/tshark_log_2022_07_20_20_21_20.pcapng",
-                "-tcp",
-                "analysis_ack_rtt"
+                "session-1/tshark_bs"
             ],
             "console": "integratedTerminal",
             "justMyCode": true
         },
-        {
-            "name": "visualize_tshark_r.py",
-            "type": "python",
-            "request": "launch",
-            "program": "tsharkCaptureAnalyzer.py",
-            "args": [
-                "session-1/tshark_ue/tshark_log_2022_07_20_20_21_17.pcapng",
-                "-tcp",
-                "analysis_ack_rtt"
-            ],
-            "console": "integratedTerminal",
-            "justMyCode": true
-        },
+        // {
+        //     "name": "visualize_tshark_r.py",
+        //     "type": "python",
+        //     "request": "launch",
+        //     "program": "tsharkCaptureAnalyzer.py",
+        //     "args": [
+        //         "session-1/tshark_ue/tshark_log_2022_07_20_20_21_17.pcapng",
+        //         "-tcp",
+        //         "analysis_ack_rtt"
+        //     ],
+        //     "console": "integratedTerminal",
+        //     "justMyCode": true
+        // },
         {
             "name": "prova.py",
             "type": "python",
