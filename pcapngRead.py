@@ -4,6 +4,51 @@ import pyshark, argparse, os
 from tabulate import tabulate
 import pandas as pd
 
+PORTS_DICT = {
+    "session-0/log_2022_07_14_first_bs.pcap":
+    None,
+    "session-0/log_2022_07_14_first_ue.pcap":
+    None,
+    "session-1/tshark_bs/tshark_log_2022_07_20_19_34_17.pcapng":
+    [44584, 44588, 54166, 54168],
+    "session-1/tshark_bs/tshark_log_2022_07_20_19_59_22.pcapng":
+    [44590, 54170, 44592, 54172],
+    "session-1/tshark_bs/tshark_log_2022_07_20_20_21_20.pcapng":
+    [44594, 54174, 44596, 54176],
+    "session-1/tshark_ue/tshark_log_2022_07_20_19_31_27.pcapng":
+    [44584, 44588, 54166, 54168],
+    "session-1/tshark_ue/tshark_log_2022_07_20_19_59_25.pcapng":
+    [44590, 54170, 44592, 54172],
+    "session-1/tshark_ue/tshark_log_2022_07_20_20_21_17.pcapng":
+    [44594, 54174, 44596, 54176],
+    "session-2/tshark-bs/tshark_log_2022_07_26_20_01_29.pcapng":
+    None,
+    "session-2/tshark-bs/tshark_log_2022_07_26_20_22_51.pcapng":
+    None
+}
+FILES_DICT = {
+    "session-0/log_2022_07_14_first_bs.pcap":
+    "session-0/log_2022_07_14_first_bs.pcap",
+    "session-0/log_2022_07_14_first_ue.pcap":
+    "session-0/log_2022_07_14_first_ue.pcap",
+    "session-1/tshark_bs/5m":
+    "session-1/tshark_bs/tshark_log_2022_07_20_19_34_17.pcapng",
+    "session-1/tshark_bs/10m":
+    "session-1/tshark_bs/tshark_log_2022_07_20_19_59_22.pcapng",
+    "session-1/tshark_bs/7.5m":
+    "session-1/tshark_bs/tshark_log_2022_07_20_20_21_20.pcapng",
+    "session-1/tshark_ue/5m":
+    "session-1/tshark_ue/tshark_log_2022_07_20_19_31_27.pcapng",
+    "session-1/tshark_ue/10m":
+    "session-1/tshark_ue/tshark_log_2022_07_20_19_59_25.pcapng",
+    "session-1/tshark_ue/7.5m":
+    "session-1/tshark_ue/tshark_log_2022_07_20_20_21_17.pcapng",
+    "session-2/tshark_bs/5m":
+    "session-2/tshark-bs/tshark_log_2022_07_26_20_01_29.pcapng",
+    "session-2/tshark_bs/10m":
+    "session-2/tshark-bs/tshark_log_2022_07_26_20_22_51.pcapng"
+}
+
 
 class Packet:
 
@@ -11,7 +56,15 @@ class Packet:
         pass
 
 
-def read_pcapng_and__divide_flows(file_name, file_pathname):
+def read_pcapng_and__divide_flows(file_name, file_pathname, pickle_flag=False):
+    # parser.add_argument('-tcp',
+    #                     dest='tcp_vars',
+    #                     metavar='tcp_vars',
+    #                     type=str,
+    #                     nargs='+',
+    #                     action='store',
+    #                     help='Any of the followings: analysis_ack_rrt')
+
     # lists to store flows
     flow_cmd_a = []
     flow_tel_a = []
@@ -62,10 +115,12 @@ def read_pcapng_and__divide_flows(file_name, file_pathname):
                   ["CMD: UE to BS", len(flow_tel_a)],
                   ["TEL: BS to UE", len(flow_cmd_r)],
                   ["TEL: UE to BS", len(flow_tel_r)]]))
+
     return len(flow_cmd_a), len(flow_tel_a), len(flow_cmd_r), len(
         flow_tel_r), flow_cmd_a, flow_cmd_r, flow_tel_a, flow_tel_r
-    
-def create_dataframe(flow: list):
+
+
+def create_dataframe(flow):
     Timestamp = [float(pckt.sniff_timestamp) for pckt in flow]
     dataframe = pd.DataFrame(zip(Timestamp), columns=["Timestamp"])
     return dataframe
@@ -73,45 +128,42 @@ def create_dataframe(flow: list):
 
 def main():
 
-    # Parsing arguments
+    # Parse arguments
     parser = argparse.ArgumentParser(
         description=
         'Read pcapng files, filter and divide packets into flows, and plot graphs.'
     )
-    parser.add_argument(
-        'file_name',
-        metavar='file_name',
-        type=str,
-        nargs='?',
-        help='file path and name',
-        default='session-1/tshark_bs/tshark_log_2022_07_20_19_34_17.pcapng')
-    parser.add_argument('-tcp',
-                        dest='tcp_vars',
-                        metavar='tcp_vars',
+    parser.add_argument('file_path',
+                        metavar='file_path',
                         type=str,
-                        nargs='+',
-                        action='store',
-                        help='Any of the followings: analysis_ack_rrt')
+                        nargs='?',
+                        help='files path',
+                        default='session-0')
     args = parser.parse_args()
     print(args.file_name, args.tcp_vars)
+    session_dir = os.getcwd() + "/" + args.file_path + "/"
 
-    # create paths and names variables
-    file_dir = os.path.dirname(os.path.realpath(__file__))
-    file_pathname = file_dir + "/" + args.file_name
+    # create variables for paths and names
+    # file_dir = os.path.dirname(os.path.realpath(__file__))
+    # file_pathname = file_dir + "/" + args.file_path
 
-    start = time.time()
     # read .pcapng file and divide flows
-    (cnt_cmd_a, cnt_cmd_r, cnt_tel_a, cnt_tel_r, flow_cmd_a, flow_cmd_r,
-     flow_tel_a,
-     flow_tel_r) = read_pcapng_and__divide_flows(args.file_name, file_pathname)
-    print("Time: ", time.time() - start)
+    for file in os.listdir(session_dir):
+        if file.endswith('.pcapng'):
+            (cnt_cmd_a, cnt_cmd_r, cnt_tel_a, cnt_tel_r, flow_cmd_a,
+             flow_cmd_r, flow_tel_a,
+             flow_tel_r) = read_pcapng_and__divide_flows(args.file_name,
+                                                         session_dir,
+                                                         pickle_flag=True)
+            flows = {
+                'flow_cmd_a': (flow_cmd_a, cnt_cmd_a),
+                'flow_tel_a': (flow_tel_a, cnt_tel_a),
+                'flow_cmd_r': (flow_cmd_r, cnt_cmd_r),
+                'flow_tel_r': (flow_tel_r, cnt_tel_r)
+            }
 
-    d = {
-        'flow_cmd_a': (flow_cmd_a, cnt_cmd_a),
-        'flow_tel_a': (flow_tel_a, cnt_tel_a),
-        'flow_cmd_r': (flow_cmd_r, cnt_cmd_r),
-        'flow_tel_r': (flow_tel_r, cnt_tel_r)
-    }
+            for flow in flows:
+                df = create_dataframe(flow[0])
 
 
 if __name__ == "__main__":
