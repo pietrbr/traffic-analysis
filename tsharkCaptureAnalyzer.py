@@ -33,12 +33,12 @@ def main():
 
     # create paths and names variables
     file_dir = os.path.dirname(os.path.realpath(__file__))
-    file_pathname = file_dir + "/" + args.file_name
+    file_pathname = f"{file_dir}/{args.file_name}"
 
     # read .pcapng file and divide flows
     (cnt_cmd_a, cnt_cmd_r, cnt_tel_a, cnt_tel_r, flow_cmd_a, flow_cmd_r,
      flow_tel_a,
-     flow_tel_r) = read_pcapng_and__divide_flows(args.file_name, file_pathname)
+     flow_tel_r) = read_pcapng_and_divide_flows(args.file_name, file_pathname)
 
     # dictonary with flow names and flows
     flows = {

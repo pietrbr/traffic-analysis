@@ -1,6 +1,6 @@
 #!/bin/python3
 import statistics
-import pyshark, argparse, os
+import os, argparse, pyshark
 from tabulate import tabulate
 from matplotlib import pyplot as plt
 import pandas as pd

@@ -1,5 +1,5 @@
 #!/bin/python3
-import os, argparse, time, pickle
+import os, argparse
 import pyshark, argparse, os
 from tabulate import tabulate
 import pandas as pd
