@@ -1,6 +1,11 @@
 close all, clear all, clc
 
-pcap_bs = pcapReader("log_2022_07_14_first_bs.pcap", OutputTimestampFormat="microseconds");
-pcap_ue = pcapReader("log_2022_07_14_first_ue.pcap", OutputTimestampFormat="microseconds");
+CAPTURE_FILE = 'log_2022_07_14_first_bs.pcapng';
 
-packets_bs = pcap_bs.readAll
+dissector = {'tcp.len','tcp.dstport'};
+
+read_filter = '';
+
+pcap_bs = pcapReader()
+
+
