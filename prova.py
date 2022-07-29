@@ -26,3 +26,8 @@ last = string[-1]
 prima = string[0:-1]
 
 print(string, last, prima)
+
+df.to_pickle("daje")
+
+df_read = pd.read_pickle("daje")
+print("\ndf\n", df, "\ndf_read\n", df_read)
