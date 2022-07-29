@@ -1,30 +1,25 @@
 #!/bin/python3
 import os, argparse
+from sqlite3 import Time
 import pyshark, argparse, os
 from tabulate import tabulate
 import pandas as pd
 
 PORTS_DICT = {
-    "session-0/log_2022_07_14_first_bs.pcap":
-    None,
-    "session-0/log_2022_07_14_first_ue.pcap":
-    None,
-    "session-1/tshark_bs/tshark_log_2022_07_20_19_34_17.pcapng":
-    [44584, 44588, 54166, 54168],
-    "session-1/tshark_bs/tshark_log_2022_07_20_19_59_22.pcapng":
-    [44590, 54170, 44592, 54172],
-    "session-1/tshark_bs/tshark_log_2022_07_20_20_21_20.pcapng":
-    [44594, 54174, 44596, 54176],
-    "session-1/tshark_ue/tshark_log_2022_07_20_19_31_27.pcapng":
-    [44584, 44588, 54166, 54168],
-    "session-1/tshark_ue/tshark_log_2022_07_20_19_59_25.pcapng":
-    [44590, 54170, 44592, 54172],
-    "session-1/tshark_ue/tshark_log_2022_07_20_20_21_17.pcapng":
-    [44594, 54174, 44596, 54176],
-    "session-2/tshark_bs/tshark_log_2022_07_26_20_01_29.pcapng":
-    None,
-    "session-2/tshark_bs/tshark_log_2022_07_26_20_22_51.pcapng":
-    None
+    "data/gnd_stl_050_bs.pcapng": [44584, 44588, 54166, 54168],
+    "data/gnd_stl_050_ue.pcapng": [44584, 44588, 54166, 54168],
+    "data/gnd_stl_075_bs.pcapng": [44594, 44596, 54174, 54176],
+    "data/gnd_stl_075_ue.pcapng": [44594, 44596, 54174, 54176],
+    "data/gnd_stl_100_bs.pcapng": [44590, 44592, 54170, 54172],
+    "data/gnd_stl_100_ue.pcapng": [44590, 44592, 54170, 54172],
+    "data/gnd_rot_050_bs.pcapng": [33154, 33158, 60524, 60526],
+    "data/gnd_rot_050_ue.pcapng": [33154, 33158, 60524, 60526],
+    "data/gnd_rot_075_bs.pcapng": [33160, 33162, 60528, 60530],
+    "data/gnd_rot_075_ue.pcapng": [33160, 33162, 60528, 60530],
+    "data/gnd_rot_100_bs.pcapng": [33166, 33168, 60534, 60536],
+    "data/gnd_rot_100_ue.pcapng": [33166, 33168, 60534, 60536],
+    "data/air_stl_050_bs.pcapng": [33170, 33172, 60538, 60540],
+    "data/air_stl_050_ue.pcapng": [33170, 33172, 60538, 60540]
 }
 FILES_DICT = {
     "session-0/a":
@@ -70,6 +65,72 @@ NAMES_DICT = {
     "session-2/tshark_bs/tshark_log_2022_07_26_20_22_51.pcapng":
     "session-2/tshark_bs/10.0m"
 }
+# PORTS_DICT = {
+#     "session-0/log_2022_07_14_first_bs.pcap":
+#     None,
+#     "session-0/log_2022_07_14_first_ue.pcap":
+#     None,
+#     "session-1/tshark_bs/tshark_log_2022_07_20_19_34_17.pcapng":
+#     [44584, 44588, 54166, 54168],
+#     "session-1/tshark_bs/tshark_log_2022_07_20_19_59_22.pcapng":
+#     [44590, 54170, 44592, 54172],
+#     "session-1/tshark_bs/tshark_log_2022_07_20_20_21_20.pcapng":
+#     [44594, 54174, 44596, 54176],
+#     "session-1/tshark_ue/tshark_log_2022_07_20_19_31_27.pcapng":
+#     [44584, 44588, 54166, 54168],
+#     "session-1/tshark_ue/tshark_log_2022_07_20_19_59_25.pcapng":
+#     [44590, 54170, 44592, 54172],
+#     "session-1/tshark_ue/tshark_log_2022_07_20_20_21_17.pcapng":
+#     [44594, 54174, 44596, 54176],
+#     "session-2/tshark_bs/tshark_log_2022_07_26_20_01_29.pcapng":
+#     None,
+#     "session-2/tshark_bs/tshark_log_2022_07_26_20_22_51.pcapng":
+#     None
+# }
+# FILES_DICT = {
+#     "session-0/a":
+#     "session-0/log_2022_07_14_first_bs.pcap",
+#     "session-0/b":
+#     "session-0/log_2022_07_14_first_ue.pcap",
+#     "session-1/tshark_bs/05.0m":
+#     "session-1/tshark_bs/tshark_log_2022_07_20_19_34_17.pcapng",
+#     "session-1/tshark_bs/10.0m":
+#     "session-1/tshark_bs/tshark_log_2022_07_20_19_59_22.pcapng",
+#     "session-1/tshark_bs/07.5m":
+#     "session-1/tshark_bs/tshark_log_2022_07_20_20_21_20.pcapng",
+#     "session-1/tshark_ue/05.0m":
+#     "session-1/tshark_ue/tshark_log_2022_07_20_19_31_27.pcapng",
+#     "session-1/tshark_ue/10.0m":
+#     "session-1/tshark_ue/tshark_log_2022_07_20_19_59_25.pcapng",
+#     "session-1/tshark_ue/07.5m":
+#     "session-1/tshark_ue/tshark_log_2022_07_20_20_21_17.pcapng",
+#     "session-2/tshark_bs/05.0m":
+#     "session-2/tshark_bs/tshark_log_2022_07_26_20_01_29.pcapng",
+#     "session-2/tshark_bs/10.0m":
+#     "session-2/tshark_bs/tshark_log_2022_07_26_20_22_51.pcapng"
+# }
+# NAMES_DICT = {
+#     "session-0/log_2022_07_14_first_bs.pcap":
+#     "session-0/a",
+#     "session-0/log_2022_07_14_first_ue.pcap":
+#     "session-0/b",
+#     "session-1/tshark_bs/tshark_log_2022_07_20_19_34_17.pcapng":
+#     "session-1/tshark_bs/05.0m",
+#     "session-1/tshark_bs/tshark_log_2022_07_20_19_59_22.pcapng":
+#     "session-1/tshark_bs/10.0m",
+#     "session-1/tshark_bs/tshark_log_2022_07_20_20_21_20.pcapng":
+#     "session-1/tshark_bs/07.5m",
+#     "session-1/tshark_ue/tshark_log_2022_07_20_19_31_27.pcapng":
+#     "session-1/tshark_ue/05.0m",
+#     "session-1/tshark_ue/tshark_log_2022_07_20_19_59_25.pcapng":
+#     "session-1/tshark_ue/10.0m",
+#     "session-1/tshark_ue/tshark_log_2022_07_20_20_21_17.pcapng":
+#     "session-1/tshark_ue/07.5m",
+#     "session-2/tshark_bs/tshark_log_2022_07_26_20_01_29.pcapng":
+#     "session-2/tshark_bs/05.0m",
+#     "session-2/tshark_bs/tshark_log_2022_07_26_20_22_51.pcapng":
+#     "session-2/tshark_bs/10.0m"
+# }
 
 
 def read_pcapng_and_divide_flows(file_name, file_path):
@@ -137,8 +198,51 @@ def read_pcapng_and_divide_flows(file_name, file_path):
 
 
 def create_dataframe(flow):
-    Timestamp = [float(pckt.sniff_timestamp) for pckt in flow]
-    dataframe = pd.DataFrame(zip(Timestamp), columns=["Timestamp"])
+    Number = []
+    Timestamp = []
+    Time_relative = []
+    Time_IDT = []
+    Tcp_len = []
+    Tcp_RTT = []
+    Tcp_initial_RTT = []
+    Lost_segment = []
+    Ack_lost_segment = []
+    Duplicate_ack = []
+
+    for pckt in flow:
+        Number.append(int(pckt.number))
+        Timestamp.append(float(pckt.sniff_timestamp))
+        Time_relative.append(float(pckt.tcp.get_field("time_relative")))
+        Time_IDT.append(float(pckt.tcp.get_field("time_delta")))
+        Tcp_len.append(float(pckt.tcp.get_field("len")))
+        Tcp_RTT.append(float(pckt.tcp.get_field("analysis_ack_rtt")))
+        Tcp_initial_RTT.append(
+            float(pckt.tcp.get_field("analysis_initial_rtt")))
+        Lost_segment.append(
+            pckt.tcp.has_field("analysis_retransmission")
+            # or pckt.tcp.has_field("analysis_fast_retransmission")
+        )
+        Ack_lost_segment.append(
+            pckt.tcp.has_field("analysis_ack_lost_segment"))
+        Duplicate_ack.append(pckt.tcp.get_field("duplicate_ack"))
+        print(
+            pd.DataFrame(zip(Number, Timestamp, Time_relative, Time_IDT,
+                             Tcp_len, Tcp_RTT, Tcp_initial_RTT, Lost_segment,
+                             Ack_lost_segment, Duplicate_ack),
+                         columns=[
+                             "Timestamp", "Time_relative", "Time_IDT",
+                             "Tcp_len", "Lost_segment", "Ack_lost_segment",
+                             "Duplicate_ack"
+                         ]).iloc[-1])  # debug
+    dataframe = pd.DataFrame(zip(Number, Timestamp, Time_relative, Time_IDT,
+                                 Tcp_len, Tcp_RTT, Tcp_initial_RTT,
+                                 Lost_segment, Ack_lost_segment,
+                                 Duplicate_ack),
+                             columns=[
+                                 "Timestamp", "Time_relative", "Time_IDT",
+                                 "Tcp_len", "Lost_segment", "Ack_lost_segment",
+                                 "Duplicate_ack"
+                             ])
     return dataframe
 
 
@@ -155,7 +259,7 @@ def main():
         type=str,
         nargs='?',
         help=
-        'Relative path of the directory; supposed to accept an argument like "session-1/tshark_bs".'
+        'Relative path of the directory; supposed to accept an argument like "data".'
     )
     args = parser.parse_args()
 
@@ -164,7 +268,7 @@ def main():
 
     # read .pcapng file and divide flows
     for file in os.listdir(rel_dir):
-        if file.endswith('.pcapng'):
+        if file.endswith('gnd_stl_100_bs.pcapng'):
             file_path = f"{rel_dir}/{file}"
             file_name = f"{args.pcapng_dir}/{file}"
             (cnt_cmd_a, cnt_tel_a, cnt_cmd_r, cnt_tel_r, flow_cmd_a,

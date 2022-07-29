@@ -18,7 +18,7 @@
             "request": "launch",
             "program": "pcapngRead.py",
             "args": [
-                "session-1/tshark_bs"
+                "data"
             ],
             "console": "integratedTerminal",
             "justMyCode": true

@@ -9,8 +9,8 @@ Three tests were performed with the drone staying still on ground (disarmed).
 | N.  | Distance (m) | Offset [bs-ue] (ms) | CMD a port | TEL a port | CMD r port | TEL r port | File Name BS          | Start Time BS | End Time BS | File Name UE          | Start Time UE | End Time UE |
 | --- | ------------ | ------------------- | ---------- | ---------- | ---------- | ---------- | --------------------- | ------------- | ----------- | --------------------- | ------------- | ----------- |
 | 1   | 05.0         | 10                  | 44584      | 44588      | 54166      | 54168      | gnd_stl_050_bs.pcapng | 19:34:18      | 19:45:22    | gnd_stl_050_ue.pcapng | 19:31:32      | 19:45:21    |
-| 2   | 07.5         | -3                  | 44590      | 44592      | 54170      | 54172      | gnd_stl_075_bs.pcapng | 20:21:24      | 20:31:33    | gnd_stl_075_ue.pcapng | 20:21:24      | 20:32:07    |
-| 3   | 10.0         | -2.7                | 44594      | 44596      | 54174      | 54176      | gnd_stl_100_bs.pcapng | 19:59:27      | 20:10:17    | gnd_stl_100_ue.pcapng | 19:59:27      | 20:10:20    |
+| 3   | 07.5         | -2.7                | 44594      | 44596      | 54174      | 54176      | gnd_stl_075_bs.pcapng | 20:21:24      | 20:31:33    | gnd_stl_075_ue.pcapng | 20:21:24      | 20:32:07    |
+| 2   | 10.0         | -3                  | 44590      | 44592      | 54170      | 54172      | gnd_stl_100_bs.pcapng | 19:59:27      | 20:10:17    | gnd_stl_100_ue.pcapng | 19:59:27      | 20:10:20    |
 
 ## Session 3
 
