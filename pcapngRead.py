@@ -1,6 +1,5 @@
 #!/bin/python3
 import os, argparse
-from sqlite3 import Time
 import pyshark, argparse, os
 from tabulate import tabulate
 import pandas as pd
@@ -44,93 +43,21 @@ FILES_DICT = {
     "session-2/tshark_bs/tshark_log_2022_07_26_20_22_51.pcapng"
 }
 NAMES_DICT = {
-    "session-0/log_2022_07_14_first_bs.pcap":
-    "session-0/a",
-    "session-0/log_2022_07_14_first_ue.pcap":
-    "session-0/b",
-    "session-1/tshark_bs/tshark_log_2022_07_20_19_34_17.pcapng":
-    "session-1/tshark_bs/05.0m",
-    "session-1/tshark_bs/tshark_log_2022_07_20_19_59_22.pcapng":
-    "session-1/tshark_bs/10.0m",
-    "session-1/tshark_bs/tshark_log_2022_07_20_20_21_20.pcapng":
-    "session-1/tshark_bs/07.5m",
-    "session-1/tshark_ue/tshark_log_2022_07_20_19_31_27.pcapng":
-    "session-1/tshark_ue/05.0m",
-    "session-1/tshark_ue/tshark_log_2022_07_20_19_59_25.pcapng":
-    "session-1/tshark_ue/10.0m",
-    "session-1/tshark_ue/tshark_log_2022_07_20_20_21_17.pcapng":
-    "session-1/tshark_ue/07.5m",
-    "session-2/tshark_bs/tshark_log_2022_07_26_20_01_29.pcapng":
-    "session-2/tshark_bs/05.0m",
-    "session-2/tshark_bs/tshark_log_2022_07_26_20_22_51.pcapng":
-    "session-2/tshark_bs/10.0m"
+    "data/gnd_stl_050_bs.pcapng": "data/gnd_stl_050_bs",
+    "data/gnd_stl_050_ue.pcapng": "data/gnd_stl_050_ue",
+    "data/gnd_stl_075_bs.pcapng": "data/gnd_stl_075_bs",
+    "data/gnd_stl_075_ue.pcapng": "data/gnd_stl_075_ue",
+    "data/gnd_stl_100_bs.pcapng": "data/gnd_stl_100_bs",
+    "data/gnd_stl_100_ue.pcapng": "data/gnd_stl_100_ue",
+    "data/gnd_rot_050_bs.pcapng": "data/gnd_rot_050_bs",
+    "data/gnd_rot_050_ue.pcapng": "data/gnd_rot_050_ue",
+    "data/gnd_rot_075_bs.pcapng": "data/gnd_rot_075_bs",
+    "data/gnd_rot_075_ue.pcapng": "data/gnd_rot_075_ue",
+    "data/gnd_rot_100_bs.pcapng": "data/gnd_rot_100_bs",
+    "data/gnd_rot_100_ue.pcapng": "data/gnd_rot_100_ue",
+    "data/air_stl_050_bs.pcapng": "data/air_stl_050_bs",
+    "data/air_stl_050_ue.pcapng": "data/air_stl_050_ue"
 }
-# PORTS_DICT = {
-#     "session-0/log_2022_07_14_first_bs.pcap":
-#     None,
-#     "session-0/log_2022_07_14_first_ue.pcap":
-#     None,
-#     "session-1/tshark_bs/tshark_log_2022_07_20_19_34_17.pcapng":
-#     [44584, 44588, 54166, 54168],
-#     "session-1/tshark_bs/tshark_log_2022_07_20_19_59_22.pcapng":
-#     [44590, 54170, 44592, 54172],
-#     "session-1/tshark_bs/tshark_log_2022_07_20_20_21_20.pcapng":
-#     [44594, 54174, 44596, 54176],
-#     "session-1/tshark_ue/tshark_log_2022_07_20_19_31_27.pcapng":
-#     [44584, 44588, 54166, 54168],
-#     "session-1/tshark_ue/tshark_log_2022_07_20_19_59_25.pcapng":
-#     [44590, 54170, 44592, 54172],
-#     "session-1/tshark_ue/tshark_log_2022_07_20_20_21_17.pcapng":
-#     [44594, 54174, 44596, 54176],
-#     "session-2/tshark_bs/tshark_log_2022_07_26_20_01_29.pcapng":
-#     None,
-#     "session-2/tshark_bs/tshark_log_2022_07_26_20_22_51.pcapng":
-#     None
-# }
-# FILES_DICT = {
-#     "session-0/a":
-#     "session-0/log_2022_07_14_first_bs.pcap",
-#     "session-0/b":
-#     "session-0/log_2022_07_14_first_ue.pcap",
-#     "session-1/tshark_bs/05.0m":
-#     "session-1/tshark_bs/tshark_log_2022_07_20_19_34_17.pcapng",
-#     "session-1/tshark_bs/10.0m":
-#     "session-1/tshark_bs/tshark_log_2022_07_20_19_59_22.pcapng",
-#     "session-1/tshark_bs/07.5m":
-#     "session-1/tshark_bs/tshark_log_2022_07_20_20_21_20.pcapng",
-#     "session-1/tshark_ue/05.0m":
-#     "session-1/tshark_ue/tshark_log_2022_07_20_19_31_27.pcapng",
-#     "session-1/tshark_ue/10.0m":
-#     "session-1/tshark_ue/tshark_log_2022_07_20_19_59_25.pcapng",
-#     "session-1/tshark_ue/07.5m":
-#     "session-1/tshark_ue/tshark_log_2022_07_20_20_21_17.pcapng",
-#     "session-2/tshark_bs/05.0m":
-#     "session-2/tshark_bs/tshark_log_2022_07_26_20_01_29.pcapng",
-#     "session-2/tshark_bs/10.0m":
-#     "session-2/tshark_bs/tshark_log_2022_07_26_20_22_51.pcapng"
-# }
-# NAMES_DICT = {
-#     "session-0/log_2022_07_14_first_bs.pcap":
-#     "session-0/a",
-#     "session-0/log_2022_07_14_first_ue.pcap":
-#     "session-0/b",
-#     "session-1/tshark_bs/tshark_log_2022_07_20_19_34_17.pcapng":
-#     "session-1/tshark_bs/05.0m",
-#     "session-1/tshark_bs/tshark_log_2022_07_20_19_59_22.pcapng":
-#     "session-1/tshark_bs/10.0m",
-#     "session-1/tshark_bs/tshark_log_2022_07_20_20_21_20.pcapng":
-#     "session-1/tshark_bs/07.5m",
-#     "session-1/tshark_ue/tshark_log_2022_07_20_19_31_27.pcapng":
-#     "session-1/tshark_ue/05.0m",
-#     "session-1/tshark_ue/tshark_log_2022_07_20_19_59_25.pcapng":
-#     "session-1/tshark_ue/10.0m",
-#     "session-1/tshark_ue/tshark_log_2022_07_20_20_21_17.pcapng":
-#     "session-1/tshark_ue/07.5m",
-#     "session-2/tshark_bs/tshark_log_2022_07_26_20_01_29.pcapng":
-#     "session-2/tshark_bs/05.0m",
-#     "session-2/tshark_bs/tshark_log_2022_07_26_20_22_51.pcapng":
-#     "session-2/tshark_bs/10.0m"
-# }
 
 
 def read_pcapng_and_divide_flows(file_name, file_path):
@@ -183,18 +110,26 @@ def read_pcapng_and_divide_flows(file_name, file_path):
     )
     flow_tel_r.load_packets()
 
-    # show table with numbers of packets for each flow
-    print(
-        tabulate([["Flow", "# of packets"], ["Collected packets", "N/A"],
-                  ["Non-classified packets", "N/A"],
-                  ["CMD: BS to UE", len(flow_cmd_a)],
-                  ["CMD: UE to BS", len(flow_tel_a)],
-                  ["TEL: BS to UE", len(flow_cmd_r)],
-                  ["TEL: UE to BS", len(flow_tel_r)]]))
+    print_flows_table(len(flow_cmd_a), len(flow_tel_a), len(flow_cmd_r),
+                      len(flow_tel_r))
 
     # TODO: evaluate if it is convenient to compute the counter of the number of packets... it may take time
     return len(flow_cmd_a), len(flow_tel_a), len(flow_cmd_r), len(
         flow_tel_r), flow_cmd_a, flow_tel_a, flow_cmd_r, flow_tel_r
+
+
+def print_flows_table(len_flow_cmd_a, len_flow_tel_a, len_flow_cmd_r,
+                      len_flow_tel_r):
+    """show table with numbers of packets for each flow"""
+    print(
+        tabulate([["Flow", "# of packets"], ["CMD: BS to UE", len_flow_cmd_a],
+                  ["CMD: UE to BS", len_flow_tel_a],
+                  ["TEL: BS to UE", len_flow_cmd_r],
+                  ["TEL: UE to BS", len_flow_tel_r],
+                  [
+                      "Collected packets (presumed)", len_flow_cmd_a +
+                      len_flow_tel_a + len_flow_cmd_r + len_flow_tel_r
+                  ], ["Non-classified packets", "N/A"]]))
 
 
 def create_dataframe(flow):
@@ -203,9 +138,12 @@ def create_dataframe(flow):
     Time_relative = []
     Time_IDT = []
     Tcp_len = []
+    Tcp_flag_syn = []
+    Tcp_flag_ack = []
+    Tcp_ack = []
     Tcp_RTT = []
     Tcp_initial_RTT = []
-    Lost_segment = []
+    Retransmission = []
     Ack_lost_segment = []
     Duplicate_ack = []
 
@@ -215,33 +153,65 @@ def create_dataframe(flow):
         Time_relative.append(float(pckt.tcp.get_field("time_relative")))
         Time_IDT.append(float(pckt.tcp.get_field("time_delta")))
         Tcp_len.append(float(pckt.tcp.get_field("len")))
-        Tcp_RTT.append(float(pckt.tcp.get_field("analysis_ack_rtt")))
-        Tcp_initial_RTT.append(
-            float(pckt.tcp.get_field("analysis_initial_rtt")))
-        Lost_segment.append(
-            pckt.tcp.has_field("analysis_retransmission")
-            # or pckt.tcp.has_field("analysis_fast_retransmission")
-        )
-        Ack_lost_segment.append(
-            pckt.tcp.has_field("analysis_ack_lost_segment"))
-        Duplicate_ack.append(pckt.tcp.get_field("duplicate_ack"))
-        print(
-            pd.DataFrame(zip(Number, Timestamp, Time_relative, Time_IDT,
-                             Tcp_len, Tcp_RTT, Tcp_initial_RTT, Lost_segment,
-                             Ack_lost_segment, Duplicate_ack),
-                         columns=[
-                             "Timestamp", "Time_relative", "Time_IDT",
-                             "Tcp_len", "Lost_segment", "Ack_lost_segment",
-                             "Duplicate_ack"
-                         ]).iloc[-1])  # debug
+        Tcp_flag_syn.append(bool(int(pckt.tcp.flags_syn)))
+        Tcp_flag_ack.append(bool(int(pckt.tcp.flags_ack)))
+        Tcp_ack.append(bool(int(pckt.tcp.ack)))
+        if Tcp_flag_ack[-1] is True:
+            if pckt.tcp.has_field("analysis_ack_rtt"):
+                Tcp_RTT.append(float(pckt.tcp.get_field("analysis_ack_rtt")))
+            else:
+                Tcp_RTT.append(None)
+            if pckt.tcp.has_field("analysis_initial_rtt"):
+                Tcp_initial_RTT.append(
+                    float(pckt.tcp.get_field("analysis_initial_rtt")))
+            else:
+                Tcp_initial_RTT.append(None)
+            Retransmission.append(
+                pckt.tcp.has_field("analysis_retransmission")
+                or pckt.tcp.has_field("analysis_fast_retransmission"))
+            Ack_lost_segment.append(
+                pckt.tcp.has_field("analysis_ack_lost_segment"))
+            Duplicate_ack.append(pckt.tcp.get_field("duplicate_ack"))
+        elif Tcp_flag_ack[-1] is False:
+            Tcp_RTT.append(None)
+            Tcp_initial_RTT.append(None)
+            Retransmission.append(None)
+            Ack_lost_segment.append(None)
+            Duplicate_ack.append(None)
+
+        # ##### DEBUG
+        # if (len(Number) == len(Timestamp) == len(Time_relative) ==
+        #         len(Time_IDT) == len(Tcp_len) == len(Tcp_flag_syn) ==
+        #         len(Tcp_flag_ack) == len(Tcp_ack) == len(Tcp_RTT) ==
+        #         len(Tcp_initial_RTT) == len(Retransmission) ==
+        #         len(Ack_lost_segment) == len(Duplicate_ack)):
+        #     print("True: same len")
+        #     print(
+        #         pd.DataFrame(zip(Number, Timestamp, Time_relative, Time_IDT,
+        #                          Tcp_len, Tcp_flag_syn, Tcp_flag_ack, Tcp_ack,
+        #                          Tcp_RTT, Tcp_initial_RTT, Retransmission,
+        #                          Ack_lost_segment, Duplicate_ack),
+        #                      columns=[
+        #                          "Number", "Timestamp", "Time_relative",
+        #                          "Time_IDT", "Tcp_len", "Tcp_flag_syn",
+        #                          "Tcp_flag_ack", "Tcp_ack", "Tcp_RTT",
+        #                          "Tcp_initial_RTT", "Lost_segment",
+        #                          "Ack_lost_segment", "Duplicate_ack"
+        #                      ]).iloc[-1])  #debug
+        # else:
+        #     print("False: different len")
+        # ##### END DEBUG
+
     dataframe = pd.DataFrame(zip(Number, Timestamp, Time_relative, Time_IDT,
-                                 Tcp_len, Tcp_RTT, Tcp_initial_RTT,
-                                 Lost_segment, Ack_lost_segment,
-                                 Duplicate_ack),
+                                 Tcp_len, Tcp_flag_syn, Tcp_flag_ack, Tcp_ack,
+                                 Tcp_RTT, Tcp_initial_RTT, Retransmission,
+                                 Ack_lost_segment, Duplicate_ack),
                              columns=[
-                                 "Timestamp", "Time_relative", "Time_IDT",
-                                 "Tcp_len", "Lost_segment", "Ack_lost_segment",
-                                 "Duplicate_ack"
+                                 "Number", "Timestamp", "Time_relative",
+                                 "Time_IDT", "Tcp_len", "Tcp_flag_syn",
+                                 "Tcp_flag_ack", "Tcp_ack", "Tcp_RTT",
+                                 "Tcp_initial_RTT", "Lost_segment",
+                                 "Ack_lost_segment", "Duplicate_ack"
                              ])
     return dataframe
 
