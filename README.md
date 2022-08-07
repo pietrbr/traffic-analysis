@@ -12,3 +12,5 @@ The long file collects all the metrics in append mode, one file for each user (U
 - _rx_brate uplink[Mbps]_ is the same as above;
 - _rx_pkts uplink_ is the same as above;
 - _ul_sinr_ is the SNR from the user.
+
+See [this webpage](https://www.epochconverter.com/) to convert epoch timestamp and divide the metrics files for each experiment.
