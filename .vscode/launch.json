@@ -23,19 +23,17 @@
             "console": "integratedTerminal",
             "justMyCode": true
         },
-        // {
-        //     "name": "visualize_tshark_r.py",
-        //     "type": "python",
-        //     "request": "launch",
-        //     "program": "tsharkCaptureAnalyzer.py",
-        //     "args": [
-        //         "session-1/tshark_ue/tshark_log_2022_07_20_20_21_17.pcapng",
-        //         "-tcp",
-        //         "analysis_ack_rtt"
-        //     ],
-        //     "console": "integratedTerminal",
-        //     "justMyCode": true
-        // },
+        {
+            "name": "SCOPEVisualize",
+            "type": "python",
+            "request": "launch",
+            "program": "SCOPEVisualize.py",
+            "args": [
+                "data"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
         {
             "name": "prova.py",
             "type": "python",

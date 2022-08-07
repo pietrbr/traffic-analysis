@@ -20,28 +20,6 @@ PORTS_DICT = {
     "data/air_stl_050_bs.pcapng": [33170, 33172, 60538, 60540],
     "data/air_stl_050_ue.pcapng": [33170, 33172, 60538, 60540]
 }
-FILES_DICT = {
-    "session-0/a":
-    "session-0/log_2022_07_14_first_bs.pcap",
-    "session-0/b":
-    "session-0/log_2022_07_14_first_ue.pcap",
-    "session-1/tshark_bs/05.0m":
-    "session-1/tshark_bs/tshark_log_2022_07_20_19_34_17.pcapng",
-    "session-1/tshark_bs/10.0m":
-    "session-1/tshark_bs/tshark_log_2022_07_20_19_59_22.pcapng",
-    "session-1/tshark_bs/07.5m":
-    "session-1/tshark_bs/tshark_log_2022_07_20_20_21_20.pcapng",
-    "session-1/tshark_ue/05.0m":
-    "session-1/tshark_ue/tshark_log_2022_07_20_19_31_27.pcapng",
-    "session-1/tshark_ue/10.0m":
-    "session-1/tshark_ue/tshark_log_2022_07_20_19_59_25.pcapng",
-    "session-1/tshark_ue/07.5m":
-    "session-1/tshark_ue/tshark_log_2022_07_20_20_21_17.pcapng",
-    "session-2/tshark_bs/05.0m":
-    "session-2/tshark_bs/tshark_log_2022_07_26_20_01_29.pcapng",
-    "session-2/tshark_bs/10.0m":
-    "session-2/tshark_bs/tshark_log_2022_07_26_20_22_51.pcapng"
-}
 NAMES_DICT = {
     "data/gnd_stl_050_bs.pcapng": "data/gnd_stl_050_bs",
     "data/gnd_stl_050_ue.pcapng": "data/gnd_stl_050_ue",
@@ -57,6 +35,22 @@ NAMES_DICT = {
     "data/gnd_rot_100_ue.pcapng": "data/gnd_rot_100_ue",
     "data/air_stl_050_bs.pcapng": "data/air_stl_050_bs",
     "data/air_stl_050_ue.pcapng": "data/air_stl_050_ue"
+}
+FILES_DICT = {
+    "data/gnd_stl_050_bs": "data/gnd_stl_050_bs.pcapng",
+    "data/gnd_stl_050_ue": "data/gnd_stl_050_ue.pcapng",
+    "data/gnd_stl_075_bs": "data/gnd_stl_075_bs.pcapng",
+    "data/gnd_stl_075_ue": "data/gnd_stl_075_ue.pcapng",
+    "data/gnd_stl_100_bs": "data/gnd_stl_100_bs.pcapng",
+    "data/gnd_stl_100_ue": "data/gnd_stl_100_ue.pcapng",
+    "data/gnd_rot_050_bs": "data/gnd_rot_050_bs.pcapng",
+    "data/gnd_rot_050_ue": "data/gnd_rot_050_ue.pcapng",
+    "data/gnd_rot_075_bs": "data/gnd_rot_075_bs.pcapng",
+    "data/gnd_rot_075_ue": "data/gnd_rot_075_ue.pcapng",
+    "data/gnd_rot_100_bs": "data/gnd_rot_100_bs.pcapng",
+    "data/gnd_rot_100_ue": "data/gnd_rot_100_ue.pcapng",
+    "data/air_stl_050_bs": "data/air_stl_050_bs.pcapng",
+    "data/air_stl_050_ue": "data/air_stl_050_ue.pcapng"
 }
 
 
@@ -228,12 +222,13 @@ def main():
         metavar='pcapng_dir',
         type=str,
         nargs='?',
+        default='data',
         help=
         'Relative path of the directory; supposed to accept an argument like "data".'
     )
     args = parser.parse_args()
 
-    # save ablsoulte path for the directory where the pcapng files are saved
+    # save absolute path for the directory where the pcapng files are saved
     rel_dir = f"./{args.pcapng_dir}"
 
     # read .pcapng file and divide flows
