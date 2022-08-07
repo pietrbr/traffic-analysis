@@ -1,8 +1,8 @@
 # Data description
 
-The scenario was urban (Carter Field).
+The scenario was urban (Carter Field). Start and End Times are provided in the GMT.
 
-## Session 1
+## Session 1 (2022-07-20)
 
 Three tests were performed with the drone staying still on ground (disarmed).
 
@@ -12,7 +12,7 @@ Three tests were performed with the drone staying still on ground (disarmed).
 | 3   | 07.5         | -2.7                | 44594      | 44596      | 54174      | 54176      | gnd_stl_075_bs.pcapng | 20:21:24      | 20:31:33    | gnd_stl_075_ue.pcapng | 20:21:24      | 20:32:07    |
 | 2   | 10.0         | -3                  | 44590      | 44592      | 54170      | 54172      | gnd_stl_100_bs.pcapng | 19:59:27      | 20:10:17    | gnd_stl_100_ue.pcapng | 19:59:27      | 20:10:20    |
 
-## Session 3
+## Session 3 (2022-07-28)
 
 Four tests were performed: three of them with the drone still on ground, but with the rotating parts moving (armed); one in air with rotating parts still (disarmed).
 
