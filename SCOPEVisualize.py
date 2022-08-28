@@ -102,6 +102,23 @@ def metric_scatterplot(metric_name, dataframe, file_name, file_path):
         size=metric_name,
         sizes=(1, 15),
         linewidth=0,
+        ax=ax,
+        data=dataframe)
+    f.figure.savefig(f"{file_name}_{metric_name}.png")
+
+
+def metric_pairplot(metric_name, dataframe, file_name, file_path):
+    # TODO: requires hue to select different kind of flows (distance, kind of flow, etc.); 
+    sns.set_theme(style="ticks")
+    f, ax = plt.subplots(figsize=(6.5, 6.5))
+    # sns.despine(f, left=True, bottom=True)
+    sns.pairplot(
+        x="Time (relative) [s]",
+        y=metric_name,
+        # hue="value",
+        # palette="ch:r=-.2,d=.3_r",
+        # hue_order=[],
+        linewidth=0,
         # ax=ax,
         data=dataframe)
     f.figure.savefig(f"{file_name}_{metric_name}.png")
@@ -135,7 +152,7 @@ def main():
                 file_name, file_path)
             for metric in dataframe:
                 # TODO: fare delle liste con le varie metriche e dividere per tipi di grafico
-                if metric != "Time_relative":
+                if metric != "Time_relative" and metric != "Timestamp":
                     metric_scatterplot(metric, dataframe, file_name, file_path)
 
 
