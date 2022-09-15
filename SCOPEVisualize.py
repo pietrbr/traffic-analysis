@@ -108,7 +108,7 @@ def metric_scatterplot(metric_name, dataframe, file_name, file_path):
 
 
 def metric_pairplot(metric_name, dataframe, file_name, file_path):
-    # TODO: requires hue to select different kind of flows (distance, kind of flow, etc.); 
+    # TODO: requires hue to select different kind of flows (distance, kind of flow, etc.);
     sns.set_theme(style="ticks")
     f, ax = plt.subplots(figsize=(6.5, 6.5))
     # sns.despine(f, left=True, bottom=True)
@@ -145,7 +145,7 @@ def main():
 
     # read .pcapng file and divide flows
     for file in os.listdir(rel_dir):
-        if file.endswith('gnd_stl_100.csv'):
+        if file.endswith('.csv'):
             file_path = f"{rel_dir}/{file}"
             file_name = f"{args.csv_dir}/{file}"
             dataframe = read_metrics_csv_and_create_dataframe(

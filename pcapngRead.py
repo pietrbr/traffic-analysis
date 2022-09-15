@@ -233,7 +233,7 @@ def main():
 
     # read .pcapng file and divide flows
     for file in os.listdir(rel_dir):
-        if file.endswith('gnd_stl_100_bs.pcapng'):
+        if file.endswith('.pcapng'):
             file_path = f"{rel_dir}/{file}"
             file_name = f"{args.pcapng_dir}/{file}"
             (cnt_cmd_a, cnt_tel_a, cnt_cmd_r, cnt_tel_r, flow_cmd_a,
