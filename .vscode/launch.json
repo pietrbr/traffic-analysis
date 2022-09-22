@@ -13,6 +13,17 @@
             "justMyCode": true
         },
         {
+            "name": "SCOPE metrics",
+            "type": "python",
+            "request": "launch",
+            "program": "SCOPEmetricsReadVisualize.py",
+            "args": [
+                "data"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
             "name": "pcapngRead",
             "type": "python",
             "request": "launch",
@@ -24,10 +35,10 @@
             "justMyCode": true
         },
         {
-            "name": "SCOPEVisualize",
+            "name": "pcapngVisualize",
             "type": "python",
             "request": "launch",
-            "program": "SCOPEVisualize.py",
+            "program": "pcapngVisualize.py",
             "args": [
                 "data"
             ],
