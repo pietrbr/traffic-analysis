@@ -40,79 +40,62 @@ VarName_all = ["Timestamp", "num_ues", "IMSI", "RNTI",...
 %     ul_rssi, ul_sinr, phr, sum_requested_prbs, ...
 %     sum_granted_prbs, dl_pmi, dl_ri, ul_n, ul_turbo_iters];
 
-% Old - TODO: delete
-% VarName = ["dl\_mcs", ...
-%     "tx\_brateDownlinkMbps", "dl\_bufferbytes", "dl\_cqi"];
-
-% Interesting varaibles given by Salvo
-VarName = ["dl\_mcs", "dl\_n\_samples", "dl\_bufferbytes", ...
-    "tx\_brateDownlinkMbps", "tx\_pktsDownlink", ...
-    "tx\_errorsDownlink", "dl\_cqi", ...
-    "ul\_mcs", "ul\_n\_samples", "ul\_bufferbytes", ...
-    "rx\_brateUplinkMbps", "rx\_pktsUplink", "rx\_errorsUplink", ...
-    "ul\_rssi", "ul\_sinr", "sum\_requested\_prbs", ...
-    "sum\_granted\_prbs"];
+VarName = ["dl\_mcs", ...
+    "tx\_brateDownlinkMbps", "dl\_bufferbytes", "dl\_cqi"];
 
 performance_vars_idx = 1:numel(VarName_all);
 performance_vars_idx =  performance_vars_idx(~cellfun(@isempty,regexp(VarName_all,strjoin(VarName,'|'))));
 
-conf_setups = [1]; % rbs
 
 z = [];
 
-for k = 1 : numel(conf_setups)
-    
-    conf_id = k-1;
-    
-    folder_path_real_world = './data_rw';
-    folder_path_colosseum = './data_col';
-    
-    folders = {folder_path_real_world, folder_path_colosseum};
-    flags = [0;1];
-    wildcard = '/*.csv';
-    
-    for j = 1 : numel(folders)
-        
-        main_folder = char(folders(j));
-        filenames = dir(strcat(main_folder,wildcard));
-        
-        for i = 1 : numel(filenames)
-            
-            [Timestamp, num_ues, IMSI, RNTI, VarName5,...
-                slicing_enabled, slice_id, slice_prb, ...
-                power_multiplier, scheduling_policy, VarName11, ...
-                dl_mcs, dl_n_samples, dl_bufferbytes, tx_brateDownlinkMbps, tx_pktsDownlink, tx_errorsDownlink, dl_cqi, ...
-                VarName19, ul_mcs, ul_n_samples, ul_bufferbytes, ...
-                rx_brateUplinkMbps, rx_pktsUplink, rx_errorsUplink, ...
-                ul_rssi, ul_sinr, phr, VarName29, sum_requested_prbs, ...
-                sum_granted_prbs, VarName32, dl_pmi, dl_ri, ul_n, ul_turbo_iters] = importfile(fullfile(filenames(i).folder,filenames(i).name));
-            
-            
-            x = [Timestamp, num_ues, IMSI, RNTI,...
-                slicing_enabled, slice_id, slice_prb, ...
-                power_multiplier, scheduling_policy, ...
-                dl_mcs, dl_n_samples, dl_bufferbytes, tx_brateDownlinkMbps, tx_pktsDownlink, tx_errorsDownlink, dl_cqi, ...
-                ul_mcs, ul_n_samples, ul_bufferbytes, ...
-                rx_brateUplinkMbps, rx_pktsUplink, rx_errorsUplink, ...
-                ul_rssi, ul_sinr, phr, sum_requested_prbs, ...
-                sum_granted_prbs, dl_pmi, dl_ri, ul_n, ul_turbo_iters];
-            
-            x = [x, flags(j).*ones(size(x,1),1), conf_setups(k).*ones(size(x,1),1)];
-            x(x(:,find(VarName == "dl_cqi"))==0,:) = []; % remove entries that are ill-defined
-            x(x(:,find(VarName == "dl_mcs"))==0,:) = []; % remove entries that are ill-defined
-            x(x(:,find(VarName == "ul_mcs"))==0,:) = []; % remove entries that are ill-defined
-            x(x(:,find(VarName == "ul_cqi"))==0,:) = []; % remove entries that are ill-defined
 
-            z = [z; x];
-            
-        end
-    end
+% folder_path = './data_rw';
+folder_path = './data_col';
+%     folder_path = strcat('./data',num2str(conf_id));
+%     folder_path_wifi = strcat('./data',num2str(conf_id));
+
+flags = [0;1];
+wildcard = '/*.csv'; % ???
+ 
+main_folder = char(folder_path);
+filenames = dir(strcat(main_folder,wildcard));
+
+for i = 1 : numel(filenames)
+    
+    [Timestamp, num_ues, IMSI, RNTI, VarName5,...
+        slicing_enabled, slice_id, slice_prb, ...
+        power_multiplier, scheduling_policy, VarName11, ...
+        dl_mcs, dl_n_samples, dl_bufferbytes, tx_brateDownlinkMbps, tx_pktsDownlink, tx_errorsDownlink, dl_cqi, ...
+        VarName19, ul_mcs, ul_n_samples, ul_bufferbytes, ...
+        rx_brateUplinkMbps, rx_pktsUplink, rx_errorsUplink, ...
+        ul_rssi, ul_sinr, phr, VarName29, sum_requested_prbs, ...
+        sum_granted_prbs, VarName32, dl_pmi, dl_ri, ul_n, ul_turbo_iters ...
+        ] = importfile(fullfile(filenames(i).folder,filenames(i).name));
+    
+    x = [Timestamp, num_ues, IMSI, RNTI,...
+        slicing_enabled, slice_id, slice_prb, ...
+        power_multiplier, scheduling_policy, ...
+        dl_mcs, dl_n_samples, dl_bufferbytes, tx_brateDownlinkMbps, tx_pktsDownlink, tx_errorsDownlink, dl_cqi, ...
+        ul_mcs, ul_n_samples, ul_bufferbytes, ...
+        rx_brateUplinkMbps, rx_pktsUplink, rx_errorsUplink, ...
+        ul_rssi, ul_sinr, phr, sum_requested_prbs, ...
+        sum_granted_prbs, dl_pmi, dl_ri, ul_n, ul_turbo_iters];
+    
+%     x = [x, flags(j).*ones(size(x,1),1), conf_setups(k).*ones(size(x,1),1)];
+    x(x(:,VarName_all == "dl_cqi")<1,:) = []; % remove entries that are ill-defined
+    x(x(:,VarName_all == "dl_mcs")<1,:) = []; % remove entries that are ill-defined
+    x(x(:,VarName_all == "ul_mcs")<1,:) = []; % remove entries that are ill-defined
+    x(x(:,VarName_all == "ul_cqi")<1,:) = []; % remove entries that are ill-defined
+    x(x(:,find(VarName_all == "tx_brateDownlinkMbps"))==0,:) = []; % remove entries that are ill-defined
+    z = [z; x];
+    
 end
 
 
 %% compare 2 examples
 
-% conf_test_id = 5;
+conf_test_id = 5;
 num_cols = size(z,2);
 
 % z_test = z(z(:,num_cols)==conf_setups(conf_test_id),:);
@@ -120,6 +103,8 @@ num_cols = size(z,2);
 z_test = z;
 
 figure(1)
+% daje1 = corr(z(:,performance_vars_idx))
+% imagesc(daje1)
 imagesc(corr(z(:,performance_vars_idx)))
 colormap(jet)
 colorbar
@@ -130,16 +115,16 @@ set(gca,'XTickLabel',VarName_all_format(performance_vars_idx));
 set(gca,'YTickLabel',VarName_all_format(performance_vars_idx));
 
 groups = cell(size(z_test,1),1);
-groups(z_test(:,num_cols-1)==1) = {'Colosseum'};
-groups(z_test(:,num_cols-1)==0) = {'Real world'};
+groups(z_test(:,num_cols-1)==1) = {'Real world'};
+groups(z_test(:,num_cols-1)==0) = {'Colosseum'};
 
 figure(2)
 gplotmatrix(z_test(:,performance_vars_idx),[],groups,'br','..',[],'on',[],VarName_all_format(:,performance_vars_idx),VarName_all_format(:,performance_vars_idx))
 
 %%
 
-metric1 = 16; % CQI
-metric2 = 10; % MCS
+metric1 = 16;
+metric2 = 10;
 
 figure(3)
 s = scatterhist(z_test(:,metric1),z_test(:,metric2),'Group',groups,...
@@ -148,7 +133,7 @@ s = scatterhist(z_test(:,metric1),z_test(:,metric2),'Group',groups,...
     'Marker','ox',...
     'MarkerSize',6,...
     'Location','NorthEast',...
-    'Direction','out');
+    'Direction','out')
 grid on
 ylabel(VarName_all_format(metric2))
 xlabel(VarName_all_format(metric1))
