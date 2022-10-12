@@ -2,6 +2,7 @@ close all
 clear all
 clc
 
+%% LIST VARIABLES
 %%%% ALL STUFF
 % VarName = ["slice_prb", "power_multiplier", "scheduling_policy",
 % "dl_mcs", "dl_n_samples", "dl_bufferbytes", "tx_brateDownlinkMbps",
@@ -11,14 +12,14 @@ clc
 % "sum_granted_prbs", "dl_pmi", "dl_ri", "ul_n", "ul_turbo_iters"];
 
 VarName_all_format = ["Timestamp", "num_ues", "IMSI", "RNTI",...
-    "slicing_enabled", "slice\_id", "slice\_prb", ...
-    "power_multiplier", "scheduling\_policy", ...
-    "MCS", "dl\_n\_samples", "dl\_bufferbytes", "Throughput [Mbps]", ...
-    "tx\_pktsDownlink", "tx\_errorsDownlink", "CQI", ...
-    "ul\_mcs", "ul\_n\_samples", "ul\_bufferbytes", ...
-    "rx\_brateUplinkMbps", "rx\_pktsUplink", "Errors", ...
-    "ul\_rssi", "ul\_sinr", "phr", "sum\_requested_prbs", ...
-    "sum\_granted\_prbs", "dl\_pmi", "dl\_ri", "ul\_n", ...
+    "slicing\_enabled", "slice\_id", "slice\_prb", ...
+    "power\_multiplier", "scheduling\_policy", ...
+    "MCS downlink", "dl\_n\_samples", "Downlink bufferbytes", "Throughput [Mbps]", ...
+    "Downlink packets tx", "tx\_errorsDownlink", "CQI", ...
+    "MCS uplink", "ul\_n\_samples", "ul\_bufferbytes", ...
+    "rx\_brateUplinkMbps", "Uplink packets rx", "Errors", ...
+    "ul\_rssi", "SINR uplink", "phr", "Sum of requested PRBs", ...
+    "Sum of granted PRBs", "dl\_pmi", "dl\_ri", "ul\_n", ...
     "ul\_turbo\_iters","intf"];
 
 VarName_all = ["Timestamp", "num_ues", "IMSI", "RNTI",...
@@ -47,14 +48,36 @@ VarName_all = ["Timestamp", "num_ues", "IMSI", "RNTI",...
 % Interesting varaibles given by Salvo
 VarName = ["dl\_mcs", "dl\_n\_samples", "dl\_bufferbytes", ...
     "tx\_brateDownlinkMbps", "tx\_pktsDownlink", ...
-    "tx\_errorsDownlink", "dl\_cqi", ...
-    "ul\_mcs", "ul\_n\_samples", "ul\_bufferbytes", ...
-    "rx\_brateUplinkMbps", "rx\_pktsUplink", "rx\_errorsUplink", ...
-    "ul\_rssi", "ul\_sinr", "sum\_requested\_prbs", ...
-    "sum\_granted\_prbs"];
+    "dl\_cqi", "ul\_mcs", "ul\_n\_samples", ...
+    "rx\_brateUplinkMbps", "rx\_pktsUplink", ...
+    "rx\_errorsUplink", "ul\_sinr", ...
+    "sum\_requested\_prbs", "sum\_granted\_prbs"];
+% VarName = ["dl\_mcs", ... % for small plots
+%     "tx\_brateDownlinkMbps", ...
+%     "dl\_bufferbytes", "dl\_cqi"];
+VarName_sc = ["dl\_mcs", "dl\_cqi", ...
+    "tx\_brateDownlinkMbps", ...
+    "tx\_pktsDownlink", ...
+    "ul\_mcs", ...
+    "rx\_pktsUplink", ...
+    "ul\_sinr", ...
+    "rx\_errorsUplink", ...
+    "sum\_requested\_prbs"];
+VarName_gp = ["dl\_mcs", "dl\_cqi", ...
+    "tx\_brateDownlinkMbps", ...
+    "tx\_pktsDownlink", ...
+    "dl\_bufferbytes", ...
+    "ul\_mcs", ...
+    "rx\_pktsUplink", ...
+    "ul\_sinr", ...
+    "sum\_requested\_prbs"];
 
 performance_vars_idx = 1:numel(VarName_all);
+performance_vars_idx_sc = 1:numel(VarName_all);
+performance_vars_idx_gp = 1:numel(VarName_all);
 performance_vars_idx =  performance_vars_idx(~cellfun(@isempty,regexp(VarName_all,strjoin(VarName,'|'))));
+performance_vars_idx_gp =  performance_vars_idx_gp(~cellfun(@isempty,regexp(VarName_all,strjoin(VarName_gp,'|'))));
+performance_vars_idx_sc =  performance_vars_idx_sc(~cellfun(@isempty,regexp(VarName_all,strjoin(VarName_sc,'|'))));
 
 conf_setups = [1]; % rbs
 
@@ -65,10 +88,34 @@ for k = 1 : numel(conf_setups)
     conf_id = k-1;
     
     folder_path_real_world = './data_rw';
-    folder_path_colosseum = './data_col';
+    folder_path_colosseum_1 = './data_col_1';
+    folder_path_colosseum_2 = './data_col_2';
+    folder_path_colosseum_3 = './data_col_3';
+    folder_path_colosseum = './data_col_all';
     
-    folders = {folder_path_real_world, folder_path_colosseum};
-    flags = [0;1];
+%% CHANGE FLAGS HERE!
+% LEGEND:
+% 0: rw     real world
+% 1: col1   1 UAV
+% 2: col2   3 UAVs
+% 3: col3   1 UAV + 3 UEs
+% 4: col    1, 2, 3 together
+
+%     flags = [0;1;2;3];
+%     flags = [0];
+%     flags = [1];
+%     flags = [2];
+%     flags = [3];
+%     flags = [4];
+%     flags = [0;1];
+%     flags = [0;2];
+    flags = [0;3];
+%     flags = [0;4];
+
+%%
+    all_folders = {folder_path_real_world, folder_path_colosseum_1, folder_path_colosseum_2, folder_path_colosseum_3, folder_path_colosseum};
+    folders = all_folders(flags+1); % +1 to use the correct indeces
+
     wildcard = '/*.csv';
     
     for j = 1 : numel(folders)
@@ -110,7 +157,7 @@ for k = 1 : numel(conf_setups)
 end
 
 
-%% compare 2 examples
+%% PLOTS
 
 % conf_test_id = 5;
 num_cols = size(z,2);
@@ -120,21 +167,27 @@ num_cols = size(z,2);
 z_test = z;
 
 figure(1)
-imagesc(corr(z(:,performance_vars_idx)))
+imagesc(corr(z(:,performance_vars_idx_sc)))
 colormap(jet)
 colorbar
 caxis([-1 1])
-set(gca, 'XTick', 1:numel(VarName)); % center x-axis ticks on bins
-set(gca, 'YTick', 1:numel(VarName)); % center y-axis ticks on bins
-set(gca,'XTickLabel',VarName_all_format(performance_vars_idx));
-set(gca,'YTickLabel',VarName_all_format(performance_vars_idx));
+set(gca, 'XTick', 1:numel(VarName_sc)); % center x-axis ticks on bins
+set(gca, 'YTick', 1:numel(VarName_sc)); % center y-axis ticks on bins
+set(gca,'XTickLabel',VarName_all_format(performance_vars_idx_sc));
+set(gca,'YTickLabel',VarName_all_format(performance_vars_idx_sc));
+savefig('scope_matlab_plots/imagesc.fig')
 
 groups = cell(size(z_test,1),1);
-groups(z_test(:,num_cols-1)==1) = {'Colosseum'};
+% groups(z_test(:,num_cols-1)==1) = {'Colosseum'};
 groups(z_test(:,num_cols-1)==0) = {'Real world'};
+groups(z_test(:,num_cols-1)==1) = {'Colosseum 1 uav'};
+groups(z_test(:,num_cols-1)==2) = {'Colosseum 3 uav'};
+groups(z_test(:,num_cols-1)==3) = {'Colosseum 1 uav + 3 ue'};
+groups(z_test(:,num_cols-1)==4) = {'Colosseum'};
 
 figure(2)
-gplotmatrix(z_test(:,performance_vars_idx),[],groups,'br','..',[],'on',[],VarName_all_format(:,performance_vars_idx),VarName_all_format(:,performance_vars_idx))
+gplotmatrix(z_test(:,performance_vars_idx_gp),[],groups,'br','..',[],'on',[],VarName_all_format(:,performance_vars_idx_gp),VarName_all_format(:,performance_vars_idx_gp))
+savefig('scope_matlab_plots/gplotmatrix.fig')
 
 %%
 
@@ -153,3 +206,5 @@ grid on
 ylabel(VarName_all_format(metric2))
 xlabel(VarName_all_format(metric1))
 % legend('Jamming ON','Jamming OFF')
+savefig('scope_matlab_plots/scatterhist.fig')
+
