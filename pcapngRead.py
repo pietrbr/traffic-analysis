@@ -18,7 +18,15 @@ PORTS_DICT = {
     "data/gnd_rot_100_bs.pcapng": [33166, 33168, 60534, 60536],
     "data/gnd_rot_100_ue.pcapng": [33166, 33168, 60534, 60536],
     "data/air_stl_050_bs.pcapng": [33170, 33172, 60538, 60540],
-    "data/air_stl_050_ue.pcapng": [33170, 33172, 60538, 60540]
+    "data/air_stl_050_ue.pcapng": [33170, 33172, 60538, 60540],
+    "data/col_1uav_bs.pcapng": [44552, 44554, 52854, 52856],
+    "data/col_1uav_uav1.pcapng": [44552, 44554, 52854, 52856],
+    "data/col_1uav3ue_bs.pcapng": [60558, 60568, 57022, 57024],
+    "data/col_1uav3ue_uav1.pcapng": [60558, 60568, 57022, 57024],
+    # "data/col_3uav_bs.pcapng": [],
+    "data/col_3uav_uav1.pcapng": [54366, 54372, 54484, 54486],
+    "data/col_3uav_uav2.pcapng": [38114, 38118, 52300, 52302],
+    "data/col_3uav_uav3.pcapng": [32790, 32792, 58336, 58338]
 }
 NAMES_DICT = {
     "data/gnd_stl_050_bs.pcapng": "data/gnd_stl_050_bs",
@@ -34,7 +42,14 @@ NAMES_DICT = {
     "data/gnd_rot_100_bs.pcapng": "data/gnd_rot_100_bs",
     "data/gnd_rot_100_ue.pcapng": "data/gnd_rot_100_ue",
     "data/air_stl_050_bs.pcapng": "data/air_stl_050_bs",
-    "data/air_stl_050_ue.pcapng": "data/air_stl_050_ue"
+    "data/air_stl_050_ue.pcapng": "data/air_stl_050_ue",
+    "data/col_1uav_bs.pcapng": "data/col_1uav_bs.pcapng",
+    "data/col_1uav_uav1.pcapng": "data/col_1uav_uav1.pcapng",
+    "data/col_1uav3ue_bs.pcapng": "data/col_1uav3ue_bs.pcapng",
+    "data/col_1uav3ue_uav1.pcapng": "data/col_1uav3ue_uav1.pcapng",
+    "data/col_3uav_uav1.pcapng": "data/col_3uav_uav1.pcapng",
+    "data/col_3uav_uav2.pcapng": "data/col_3uav_uav2.pcapng",
+    "data/col_3uav_uav3.pcapng": "data/col_3uav_uav3.pcapng",
 }
 FILES_DICT = {
     "data/gnd_stl_050_bs": "data/gnd_stl_050_bs.pcapng",
